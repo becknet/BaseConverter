@@ -1,4 +1,4 @@
-const CACHE_NAME = 'base-converter-v1.1.0';
+const CACHE_NAME = 'base-converter-v1.2.0';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -9,18 +9,22 @@ const urlsToCache = [
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
 ];
 
-// Install event - cache resources
+// Install event - cache only essential assets
 self.addEventListener('install', function(event) {
-  console.log('Service Worker: Installing v1.1.0...');
+  console.log('Service Worker: Installing v1.2.0...');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
-        console.log('Service Worker: Caching files');
-        return cache.addAll(urlsToCache);
+        console.log('Service Worker: Caching essential assets only');
+        // Only cache external dependencies, not our own files
+        return cache.addAll([
+          'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+          'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
+        ]);
       })
       .then(function() {
-        console.log('Service Worker: All files cached, skipping waiting');
+        console.log('Service Worker: Essential assets cached, skipping waiting');
         return self.skipWaiting(); // Force immediate activation
       })
       .catch(function(error) {
@@ -31,7 +35,7 @@ self.addEventListener('install', function(event) {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', function(event) {
-  console.log('Service Worker: Activating v1.1.0...');
+  console.log('Service Worker: Activating v1.2.0...');
   
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
@@ -50,58 +54,65 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - network first for HTML, cache first for assets
 self.addEventListener('fetch', function(event) {
   // Skip non-http(s) requests like chrome-extension://
   if (!event.request.url.startsWith('http')) {
     return;
   }
   
-  console.log('Service Worker: Fetching', event.request.url);
+  const url = new URL(event.request.url);
+  const isOwnOrigin = url.origin === location.origin;
+  const isHTMLRequest = event.request.destination === 'document' || 
+                       event.request.headers.get('accept')?.includes('text/html');
   
-  event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        // Return cached version or fetch from network
-        if (response) {
-          console.log('Service Worker: Serving from cache', event.request.url);
-          return response;
-        }
-        
-        console.log('Service Worker: Fetching from network', event.request.url);
-        return fetch(event.request).then(function(response) {
-          // Don't cache non-successful responses or non-basic types
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-          
-          // Skip caching for non-http requests
-          if (!event.request.url.startsWith('http')) {
-            return response;
-          }
-          
-          // Clone the response as it can only be consumed once
-          const responseToCache = response.clone();
-          
-          // Add successful responses to cache
-          caches.open(CACHE_NAME)
-            .then(function(cache) {
+  if (isOwnOrigin && isHTMLRequest) {
+    // Network First strategy for HTML files (always get fresh content)
+    event.respondWith(
+      fetch(event.request)
+        .then(function(response) {
+          // Cache the fresh response
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then(function(cache) {
               cache.put(event.request, responseToCache);
             });
-          
+          }
           return response;
-        }).catch(function(error) {
-          console.log('Service Worker: Network fetch failed', error);
-          
-          // For navigation requests, return a custom offline page
-          if (event.request.destination === 'document') {
-            return caches.match('/index.html');
+        })
+        .catch(function() {
+          // Fallback to cache if network fails
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    // Cache First strategy for assets (CSS, JS, images)
+    event.respondWith(
+      caches.match(event.request)
+        .then(function(response) {
+          if (response) {
+            console.log('Service Worker: Serving from cache', event.request.url);
+            return response;
           }
           
+          console.log('Service Worker: Fetching from network', event.request.url);
+          return fetch(event.request).then(function(response) {
+            // Cache successful responses
+            if (response && response.status === 200 && response.type === 'basic') {
+              const responseToCache = response.clone();
+              caches.open(CACHE_NAME).then(function(cache) {
+                cache.put(event.request, responseToCache);
+              });
+            }
+            return response;
+          });
+        })
+        .catch(function(error) {
+          console.log('Service Worker: Request failed', error);
           throw error;
-        });
-      })
-  );
+        })
+    );
+  }
 });
 
 // Background sync (for future enhancements)
