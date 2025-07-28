@@ -6,7 +6,8 @@ class BaseConverter {
             binary: { id: 'binary', base: 2, indicator: '₂', maxDigits: 32 },
             octal: { id: 'octal', base: 8, indicator: '₈', maxDigits: 11 },
             decimal: { id: 'decimal', base: 10, indicator: '₁₀', maxDigits: 10 },
-            hex: { id: 'hex', base: 16, indicator: '₁₆', maxDigits: 8 }
+            hex: { id: 'hex', base: 16, indicator: '₁₆', maxDigits: 8 },
+            roman: { id: 'roman', base: 'roman', indicator: 'ℝ', maxValue: 3999 }
         };
         
         this.init();
@@ -37,6 +38,8 @@ class BaseConverter {
             this.toggleSystem('decimalSystem', e.target.checked));
         document.getElementById('showHex').addEventListener('change', (e) => 
             this.toggleSystem('hexSystem', e.target.checked));
+        document.getElementById('showRoman').addEventListener('change', (e) => 
+            this.toggleSystem('romanSystem', e.target.checked));
 
         // Button listeners
         document.getElementById('resetBtn').addEventListener('click', () => this.reset());
@@ -62,7 +65,11 @@ class BaseConverter {
         if (value === '') {
             this.currentValue = 0;
         } else {
-            this.currentValue = parseInt(value, this.bases[baseType].base);
+            if (baseType === 'roman') {
+                this.currentValue = this.romanToDecimal(value);
+            } else {
+                this.currentValue = parseInt(value, this.bases[baseType].base);
+            }
         }
 
         this.updateAllDisplays();
@@ -105,6 +112,7 @@ class BaseConverter {
             case 'octal': return ['0', '1', '2', '3', '4', '5', '6', '7'];
             case 'decimal': return ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
             case 'hex': return ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+            case 'roman': return ['I', 'V', 'X', 'L', 'C', 'D', 'M'];
             default: return [];
         }
     }
@@ -115,6 +123,7 @@ class BaseConverter {
             case 'octal': return 'Oktalsystem';
             case 'decimal': return 'Dezimalsystem';
             case 'hex': return 'Hexadezimalsystem';
+            case 'roman': return 'Römisches Zahlensystem';
             default: return '';
         }
     }
@@ -165,17 +174,27 @@ class BaseConverter {
         if (!display) return;
 
         const baseInfo = this.bases[baseType];
-        const convertedValue = this.currentValue.toString(baseInfo.base).toUpperCase();
+        let convertedValue;
+        
+        if (baseType === 'roman') {
+            convertedValue = this.decimalToRoman(this.currentValue);
+        } else {
+            convertedValue = this.currentValue.toString(baseInfo.base).toUpperCase();
+        }
         
         // Clear previous content
         display.innerHTML = '';
 
         if (this.currentValue === 0) {
-            this.createDigitBox(display, '0');
+            if (baseType === 'roman') {
+                this.createDigitBox(display, 'N');
+            } else {
+                this.createDigitBox(display, '0');
+            }
         } else {
-            // Create digit boxes for each digit
-            [...convertedValue].forEach(digit => {
-                this.createDigitBox(display, digit);
+            // Create digit boxes for each character
+            [...convertedValue].forEach(char => {
+                this.createDigitBox(display, char);
             });
         }
     }
@@ -195,7 +214,14 @@ class BaseConverter {
         // Only update if this is not the active input to avoid cursor jumping
         if (this.activeInput !== baseType) {
             const baseInfo = this.bases[baseType];
-            const convertedValue = this.currentValue.toString(baseInfo.base).toUpperCase();
+            let convertedValue;
+            
+            if (baseType === 'roman') {
+                convertedValue = this.decimalToRoman(this.currentValue);
+            } else {
+                convertedValue = this.currentValue.toString(baseInfo.base).toUpperCase();
+            }
+            
             input.value = convertedValue;
         }
     }
@@ -231,6 +257,50 @@ class BaseConverter {
         if (existingError) {
             existingError.remove();
         }
+    }
+
+    // Roman numeral conversion functions
+    romanToDecimal(roman) {
+        const romanMap = {
+            'I': 1, 'V': 5, 'X': 10, 'L': 50,
+            'C': 100, 'D': 500, 'M': 1000
+        };
+        
+        let result = 0;
+        let prevValue = 0;
+        
+        for (let i = roman.length - 1; i >= 0; i--) {
+            const currentValue = romanMap[roman[i]];
+            
+            if (currentValue < prevValue) {
+                result -= currentValue;
+            } else {
+                result += currentValue;
+            }
+            
+            prevValue = currentValue;
+        }
+        
+        return Math.max(0, Math.min(result, 3999));
+    }
+    
+    decimalToRoman(num) {
+        if (num === 0) return 'N';
+        if (num > 3999) return 'INVALID';
+        
+        const values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+        const symbols = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'];
+        
+        let result = '';
+        
+        for (let i = 0; i < values.length; i++) {
+            while (num >= values[i]) {
+                result += symbols[i];
+                num -= values[i];
+            }
+        }
+        
+        return result;
     }
 }
 

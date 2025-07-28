@@ -203,6 +203,13 @@ h1 {
     opacity: 0.5;
 }
 
+/* Roman Numeral Styles */
+#romanSystem .digit-box {
+    min-width: 35px;
+    width: auto;
+    padding: 0 8px;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .system-row {
