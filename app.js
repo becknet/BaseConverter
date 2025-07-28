@@ -308,8 +308,23 @@ class BaseConverter {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('service-worker.js')
-            .then(function() {
+            .then(function(registration) {
                 console.log('ServiceWorker registration successful');
+                
+                // Check for updates every time the app loads
+                registration.addEventListener('updatefound', function() {
+                    console.log('Service Worker update found');
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', function() {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            console.log('New service worker installed, reloading page');
+                            window.location.reload();
+                        }
+                    });
+                });
+                
+                // Check for updates immediately
+                registration.update();
             })
             .catch(function(err) {
                 console.log('ServiceWorker registration failed: ', err);

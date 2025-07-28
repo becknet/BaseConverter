@@ -1,4 +1,4 @@
-const CACHE_NAME = 'base-converter-v1.0.0';
+const CACHE_NAME = 'base-converter-v1.1.0';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -11,7 +11,7 @@ const urlsToCache = [
 
 // Install event - cache resources
 self.addEventListener('install', function(event) {
-  console.log('Service Worker: Installing...');
+  console.log('Service Worker: Installing v1.1.0...');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -20,8 +20,8 @@ self.addEventListener('install', function(event) {
         return cache.addAll(urlsToCache);
       })
       .then(function() {
-        console.log('Service Worker: All files cached');
-        return self.skipWaiting();
+        console.log('Service Worker: All files cached, skipping waiting');
+        return self.skipWaiting(); // Force immediate activation
       })
       .catch(function(error) {
         console.log('Service Worker: Cache failed', error);
@@ -31,7 +31,7 @@ self.addEventListener('install', function(event) {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', function(event) {
-  console.log('Service Worker: Activating...');
+  console.log('Service Worker: Activating v1.1.0...');
   
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
@@ -44,8 +44,8 @@ self.addEventListener('activate', function(event) {
         })
       );
     }).then(function() {
-      console.log('Service Worker: Activated');
-      return self.clients.claim();
+      console.log('Service Worker: Activated, claiming clients');
+      return self.clients.claim(); // Take control immediately
     })
   );
 });
