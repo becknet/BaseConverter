@@ -14,7 +14,7 @@ Eine Progressive Web App zur interaktiven Umrechnung zwischen Binär-, Oktal-, D
 
 ## 🚀 Demo
 
-[Live Demo auf GitHub Pages](https://dein-username.github.io/BaseConverter/)
+[Live Demo auf GitHub Pages](https://becknet.github.io/BaseConverter/)
 
 ## 🛠️ Installation & Nutzung
 
@@ -22,7 +22,7 @@ Eine Progressive Web App zur interaktiven Umrechnung zwischen Binär-, Oktal-, D
 
 1. Repository klonen:
 ```bash
-git clone https://github.com/dein-username/BaseConverter.git
+git clone https://github.com/becknet/BaseConverter.git
 cd BaseConverter
 ```
 
