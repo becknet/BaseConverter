@@ -2,8 +2,6 @@
 
 Eine Progressive Web App zur interaktiven Umrechnung zwischen Binär-, Oktal-, Dezimal- und Hexadezimalsystem.
 
-![Base Converter Screenshot](https://via.placeholder.com/800x400/007bff/ffffff?text=Base+Converter)
-
 ## ✨ Features
 
 - **🔄 Live-Umrechnung**: Automatische Konvertierung beim Tippen
@@ -102,8 +100,8 @@ Dieses Projekt steht unter der MIT Lizenz - siehe [LICENSE](LICENSE) Datei für 
 
 ## 🔗 Links
 
-- [Projekt Repository](https://github.com/dein-username/BaseConverter)
-- [Issues & Bug Reports](https://github.com/dein-username/BaseConverter/issues)
+- [Projekt Repository](https://github.com/becknet/BaseConverter)
+- [Issues & Bug Reports](https://github.com/becknet/BaseConverter/issues)
 - [PRD Dokument](PRD.md)
 
 ---
