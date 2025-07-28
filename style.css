@@ -1,0 +1,286 @@
+/* Base Converter Styles */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --digit-box-bg: #f8f9fa;
+    --digit-box-border: #dee2e6;
+    --error-color: #dc3545;
+}
+
+body {
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* System Row Layout */
+.system-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 60px;
+    flex-wrap: wrap;
+}
+
+/* Base Indicator Front */
+.base-indicator-front {
+    flex-shrink: 0;
+    min-width: 50px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.base-indicator-large {
+    font-size: 2rem;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* Input Field */
+.system-row .form-control {
+    max-width: 150px;
+    flex-shrink: 0;
+}
+
+/* Horizontal Digit Display */
+.digit-display-horizontal {
+    flex: 1;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 10px;
+    background-color: #fafafa;
+    border-radius: 12px;
+    border: 2px solid var(--digit-box-border);
+    min-width: 200px;
+}
+
+.digit-box {
+    width: 60px;
+    height: 60px;
+    background-color: var(--digit-box-bg);
+    border: 2px solid var(--digit-box-border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    color: #333;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.digit-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Input Container */
+.input-container {
+    max-width: 300px;
+    margin-left: auto;
+    text-align: right;
+}
+
+.input-container .form-control-sm {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Input Styles */
+.form-control {
+    border-radius: 8px;
+    border: 2px solid var(--digit-box-border);
+    padding: 0.75rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-control.is-invalid {
+    border-color: var(--error-color);
+}
+
+.form-control.is-invalid:focus {
+    border-color: var(--error-color);
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    color: #333;
+}
+
+/* Button Row */
+.button-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.button-equal-width {
+    flex: 1;
+    max-width: calc(33.333% - 7px);
+}
+
+/* Checkbox Styles */
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.form-check-label {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Number System Visibility */
+.number-system.hidden {
+    display: none;
+}
+
+/* Empty State */
+.digit-display-horizontal:empty::after {
+    content: "—";
+    color: var(--secondary-color);
+    font-size: 2.5rem;
+    opacity: 0.5;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .system-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .base-indicator-front {
+        align-self: flex-start;
+    }
+    
+    .digit-display-horizontal {
+        min-width: auto;
+        order: -1;
+    }
+    
+    .system-row .form-control {
+        max-width: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .digit-box {
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+    }
+    
+    .digit-display-horizontal {
+        min-height: 50px;
+        padding: 8px;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    h1 {
+        font-size: 1.75rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+/* Animation for value changes */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.digit-box.updated {
+    animation: pulse 0.3s ease-in-out;
+    background-color: #e3f2fd;
+    border-color: var(--primary-color);
+}
+
+/* Loading state */
+.loading .digit-display {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Error tooltip */
+.invalid-feedback {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--error-color);
+    margin-top: 0.25rem;
+}
