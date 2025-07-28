@@ -52,6 +52,11 @@ self.addEventListener('activate', function(event) {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', function(event) {
+  // Skip non-http(s) requests like chrome-extension://
+  if (!event.request.url.startsWith('http')) {
+    return;
+  }
+  
   console.log('Service Worker: Fetching', event.request.url);
   
   event.respondWith(
@@ -65,8 +70,13 @@ self.addEventListener('fetch', function(event) {
         
         console.log('Service Worker: Fetching from network', event.request.url);
         return fetch(event.request).then(function(response) {
-          // Don't cache non-successful responses
+          // Don't cache non-successful responses or non-basic types
           if (!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+          }
+          
+          // Skip caching for non-http requests
+          if (!event.request.url.startsWith('http')) {
             return response;
           }
           

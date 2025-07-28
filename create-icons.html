@@ -18,7 +18,7 @@
     <button onclick="downloadAllIcons()">Alle Icons herunterladen</button>
 
     <script>
-        const iconSizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        const iconSizes = [16, 32, 72, 96, 128, 144, 152, 180, 192, 384, 512];
         
         function createIcon(size) {
             const canvas = document.createElement('canvas');
@@ -97,6 +97,35 @@
             iconSizes.forEach(size => {
                 setTimeout(() => downloadIcon(size), size * 10); // Stagger downloads
             });
+            
+            // Generate special favicons
+            setTimeout(() => downloadFavicon(), 2000);
+            setTimeout(() => downloadAppleTouchIcon(), 2500);
+        }
+        
+        function downloadFavicon() {
+            // Create 32x32 favicon
+            const canvas = createIcon(32);
+            const link = document.createElement('a');
+            link.download = 'favicon-32x32.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            // Create 16x16 favicon
+            const canvas16 = createIcon(16);
+            const link16 = document.createElement('a');
+            link16.download = 'favicon-16x16.png';
+            link16.href = canvas16.toDataURL('image/png');
+            link16.click();
+        }
+        
+        function downloadAppleTouchIcon() {
+            // Create 180x180 Apple touch icon
+            const canvas = createIcon(180);
+            const link = document.createElement('a');
+            link.download = 'apple-touch-icon.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
         }
         
         // Add download functionality to each icon
