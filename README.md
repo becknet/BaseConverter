@@ -1,6 +1,6 @@
 # 🔢 Base Converter
 
-Eine Progressive Web App zur interaktiven Umrechnung zwischen Binär-, Oktal-, Dezimal- und Hexadezimalsystem.
+Eine Progressive Web App zur interaktiven Umrechnung zwischen Binär-, Oktal-, Dezimal-, Hexadezimalsystem und dem römischen Zahlensystem.
 
 ## ✨ Features
 
@@ -61,6 +61,7 @@ python3 -m http.server 8000
 | Oktal | 8 | 0-7 | 17₈ |
 | Dezimal | 10 | 0-9 | 15₁₀ |
 | Hexadezimal | 16 | 0-9, A-F | F₁₆ |
+| Römisch | | I,V,X,L,C,D,M | XV |
 
 ## 🎮 Bedienung
 
