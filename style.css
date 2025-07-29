@@ -213,22 +213,28 @@ h1 {
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .system-row {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        flex-wrap: wrap;
+        /*align-items: stretch;*/
         gap: 10px;
     }
-    
+
     .base-indicator-front {
         align-self: flex-start;
     }
-    
+
     .digit-display-horizontal {
         min-width: auto;
-        order: -1;
+        /*order: -1;*/
     }
-    
+
     .system-row .form-control {
         max-width: none;
+    }
+
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
     }
 }
 
@@ -238,38 +244,39 @@ h1 {
         height: 45px;
         font-size: 1.5rem;
     }
-    
+
     .digit-display-horizontal {
         min-height: 50px;
         padding: 8px;
     }
-    
+
     .card-body {
         padding: 1rem;
     }
-    
+
     h1 {
         font-size: 1.75rem;
     }
-    
+
     .btn {
         padding: 0.5rem 0.75rem;
         font-size: 0.9rem;
     }
 }
 
-@media (max-width: 768px) {
-    .container-fluid {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-}
-
 /* Animation for value changes */
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .digit-box.updated {

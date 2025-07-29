@@ -68,6 +68,7 @@ class BaseConverter {
             if (baseType === 'roman') {
                 this.currentValue = this.romanToDecimal(value);
             } else {
+                //wandelt eine Eingabe (12) in einer spezifischen base (16) in einen Dezimalzahl um -> 18
                 this.currentValue = parseInt(value, this.bases[baseType].base);
             }
         }
@@ -179,6 +180,7 @@ class BaseConverter {
         if (baseType === 'roman') {
             convertedValue = this.decimalToRoman(this.currentValue);
         } else {
+            //wandelt den aktuellen wert in das gewünschte Zahlensystem (base) um.
             convertedValue = this.currentValue.toString(baseInfo.base).toUpperCase();
         }
         
